@@ -1,0 +1,53 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryModels
+@model IEnumerable<InventoryDto>
+
+@{
+    Layout = "_Layout";
+
+}
+
+<section class="section">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table datatable align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>Product</th>
+                        <th>On Hand</th>
+                        <th>Reserved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="4" class="text-center text-muted">No inventory.</td></tr>
+                    }
+                    else
+                    {
+                        foreach (var i in Model)
+                        {
+                            <tr>
+                                <td>@i.Product.Name</td>
+                                <td class="text-end">@i.QuantityOnHand</td>
+                                <td class="text-end">@i.QuantityReserved</td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@i.ID" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>new simpleDatatables.DataTable('.datatable');</script>
+}

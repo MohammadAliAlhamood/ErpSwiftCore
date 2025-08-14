@@ -1,0 +1,60 @@
+﻿@using ErpSwiftCore.Web.Models.BillingSystemManagmentModels.OrderModels
+@model OrderDto
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Order Details";
+}
+
+<section class="section">
+    <div class="row mb-3">
+        <div class="col-lg-4">
+            <div class="card p-3">
+                <h5 class="card-title">
+                    @Model.OrderNumber — @Model.OrderStatus
+                </h5>
+                <p><strong>Date:</strong> @Model.OrderDate.ToString("yyyy-MM-dd")</p>
+                <p><strong>Party:</strong> @Model.Party.Name</p>
+                <p><strong>Total:</strong> @Model.TotalAmount.ToString("N2") @Model.Currency.CurrencyCode</p>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-primary mb-4">Order Lines</h5>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Discount</th>
+                                <th>SubTotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ln in Model.OrderLines)
+                            {
+                                <tr class="text-center">
+                                    <td>@ln.Product.Name</td>
+                                    <td>@ln.Quantity</td>
+                                    <td>@ln.UnitPrice.ToString("N2")</td>
+                                    <td>@ln.Discount.ToString("N2")</td>
+                                    <td>@ln.SubTotal.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                    <a asp-action="Upsert" asp-route-id="@Model.ID" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

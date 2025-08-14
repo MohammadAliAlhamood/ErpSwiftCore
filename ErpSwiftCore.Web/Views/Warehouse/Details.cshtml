@@ -1,0 +1,123 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.WarehouseModels
+@model WarehouseWithInventoriesDto
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Warehouse Details";
+}
+
+<section class="section">
+    <div class="row align-items-start">
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <p class="card-text">
+                        <strong>Location:</strong> @(string.IsNullOrEmpty(Model.Location) ? "—" : Model.Location)<br />
+                        <strong>Branch:</strong> @Model.Branch.BranchName
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary">تفاصيل المستودع</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Is Storage</dt>
+                      
+                        
+                        
+                        <dd class="col-sm-8">
+                            @Html.Raw(Model.IsStorage
+                                                        ? "<i class=\"bi bi-check-circle-fill text-success\"></i>"
+                                                        : "<i class=\"bi bi-x-circle-fill text-danger\"></i>")
+                        </dd>
+
+                        <dt class="col-sm-4">Is Operational</dt>
+
+
+                        <dd class="col-sm-8">
+                            @Html.Raw(Model.IsOperational
+                                                        ? "<i class=\"bi bi-check-circle-fill text-success\"></i>"
+                                                        : "<i class=\"bi bi-x-circle-fill text-danger\"></i>")
+                        </dd>
+
+
+                        <dt class="col-sm-4">Created At</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">Updated At</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.UpdatedAt != null)
+                            {
+                                @Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">Created By</dt>
+                        <dd class="col-sm-8">@Model.CreatedBy</dd>
+
+                        <dt class="col-sm-4">Updated By</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrWhiteSpace(Model.UpdatedBy.ToString()))
+                            {
+                                @Model.UpdatedBy
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary">المخزونات في هذا المستودع</h5>
+                    @if (!Model.Inventories.Any())
+                    {
+                        <p class="text-center text-muted">No inventory items found.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th>Inventory ID</th>
+                                    <th>Product ID</th>
+                                    <th>On Hand</th>
+                                    <th>Reserved</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var inv in Model.Inventories)
+                                {
+                                    <tr>
+                                        <td>@inv.ID</td>
+                                        <td>@inv.ProductID</td>
+                                        <td class="text-end">@inv.QuantityOnHand</td>
+                                        <td class="text-end">@inv.QuantityReserved</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> رجوع
+                    </a>
+                    <a asp-action="Upsert" asp-route-id="@Model.ID" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> تعديل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

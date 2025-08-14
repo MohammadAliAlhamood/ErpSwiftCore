@@ -1,0 +1,63 @@
+﻿@using ErpSwiftCore.Web.Models.FinancialSystemManagmentModels.CostCenterModels
+@model CostCenterDto
+
+@{
+    Layout = "_Layout";
+    bool isEdit = Model.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Cost Center" : "Create New Cost Center";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID" />
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="CenterName">Name</label>
+                    <div class="col-sm-10">
+                        <input asp-for="CenterName" class="form-control" />
+                        <span asp-validation-for="CenterName" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="Code">Code</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Code" class="form-control" />
+                    </div>
+                </div>
+ 
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit"
+                            class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save Changes" : "Create Center")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

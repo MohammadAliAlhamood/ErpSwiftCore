@@ -1,0 +1,148 @@
+﻿@using ErpSwiftCore.Web.Enums
+@using ErpSwiftCore.Web.Models.ProductSystemManagmentModels.ProductModels
+@model IEnumerable<ProductDto>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Products";
+}
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@ViewData["Title"]</h5>
+                    <p class="card-text mb-4">
+                        إدارة المنتجات — عرض، إنشاء، تعديل، أو حذف المنتجات.
+                    </p>
+                    <div class="mb-3 d-flex flex-wrap gap-2">
+                        <a asp-action="Upsert" class="btn btn-primary">
+                            <i class="bi bi-plus-lg"></i> New Product
+                        </a>
+                        <button id="btnDeleteAll" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Delete All
+                        </button>
+                    </div>
+
+                    <table class="table datatable table-bordered table-hover align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th style="width:40px;">
+                                    <input type="checkbox" id="selectAll" />
+                                </th>
+                                <th>Name</th>
+                                <th>SKU</th>
+                                <th>Code</th>
+                                <th>Type</th>
+                                <th>Unit</th>
+                                <th>Description</th>
+                                <th style="width:120px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted">No products to display.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var p in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="select-item" value="@p.ID" />
+                                        </td>
+                                        <td>@p.Name</td>
+                                        <td>@p.SKU</td>
+                                        <td>@p.Code</td>
+                                        <td>@p.ProductType</td>
+                                        <td>@p.UnitOfMeasurement?.Name</td>
+                                        <td>
+                                            @if (!string.IsNullOrWhiteSpace(p.Description))
+                                            {
+                                                @Html.Raw(
+                                                p.Description.Length > 50
+                                                ? p.Description.Substring(0, 50) + "…"
+                                                : p.Description
+                                                                        )
+                                                                        }
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a asp-action="Details" asp-route-id="@p.ID" class="btn btn-info" title="View">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a asp-action="Upsert" asp-route-id="@p.ID" class="btn btn-warning" title="Edit">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <form asp-action="Delete" asp-route-id="@p.ID" method="post" class="d-inline delete-form">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="button" class="btn btn-danger btn-delete" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            new simpleDatatables.DataTable('.datatable');
+
+            $('#selectAll').on('change', function () {
+                $('.select-item').prop('checked', this.checked);
+            });
+
+            $(document).on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                var form = $(this).closest('.delete-form');
+                Swal.fire({
+                    title: 'Delete Product',
+                    text: 'Are you sure you want to permanently delete this product?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'Cancel'
+                }).then(result => {
+                    if (result.isConfirmed) form.submit();
+                });
+            });
+
+            $('#btnDeleteAll').on('click', function () {
+                var ids = $('.select-item:checked').map(function () { return this.value; }).get();
+                if (!ids.length) {
+                    toastr.warning('لم يتم تحديد أي منتج للحذف.');
+                    return;
+                }
+                Swal.fire({
+                    title: 'Delete Selected',
+                    text: 'Are you sure you want to delete the selected products?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete',
+                    cancelButtonText: 'Cancel'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        $.post('@Url.Action("DeleteRange")', {
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                            ids: ids
+                        }).done(() => location.reload());
+                    }
+                });
+            });
+        });
+    </script>
+}

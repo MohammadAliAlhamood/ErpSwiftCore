@@ -1,0 +1,282 @@
+﻿@using ErpSwiftCore.Web.Models.BillingSystemManagmentModels.OrderModels
+@using ErpSwiftCore.Web.Enums
+@model ErpSwiftCore.Web.ViewModels.OrderViewModel
+
+@{
+    Layout = "_Layout";
+    // ننسخ الـ ICollection إلى List لكي نستطيع الفهرسة
+    var orderLines = Model.Order.OrderLines.ToList();
+    bool isEdit = Model.Order.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Order" : "Create New Order";
+}
+
+<section class="section">
+    <div class="card mx-auto" style="max-width:800px">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Order.ID" />
+                <input type="hidden" asp-for="DeletedLineIds" />
+
+                <!-- Order Header -->
+                <div class="row g-3">
+                    <div class="col-md-4 form-floating">
+                        <input asp-for="Order.OrderNumber" class="form-control" placeholder="Order #" required />
+                        <label asp-for="Order.OrderNumber">Order Number</label>
+                        <div class="invalid-feedback">Enter order number.</div>
+                    </div>
+                    <div class="col-md-4 form-floating">
+                        <input asp-for="Order.OrderDate" type="date" class="form-control" required />
+                        <label asp-for="Order.OrderDate">Order Date</label>
+                        <div class="invalid-feedback">Select a date.</div>
+                    </div>
+                    <div class="col-md-4 form-floating">
+                        <select asp-for="Order.OrderType"
+                                asp-items="Html.GetEnumSelectList<OrderType>()"
+                                class="form-select" required>
+                            <option value="">-- Type --</option>
+                        </select>
+                        <label asp-for="Order.OrderType">Order Type</label>
+                        <div class="invalid-feedback">Choose type.</div>
+                    </div>
+
+                    <div class="col-md-6 form-floating">
+                        <select asp-for="Order.CurrencyId"
+                                asp-items="Model.CurrencyList"
+                                class="form-select" required>
+                            <option value="">-- Currency --</option>
+                        </select>
+                        <label asp-for="Order.CurrencyId">Currency</label>
+                        <div class="invalid-feedback">Select currency.</div>
+                    </div>
+                    <div class="col-md-6 form-floating">
+                        <select asp-for="Order.Party.Type"
+                                asp-items="Html.GetEnumSelectList<PartyType>()"
+                                class="form-select" required id="partyType">
+                            <option value="">-- Party Type --</option>
+                        </select>
+                        <label asp-for="Order.Party.Type">Party Type</label>
+                        <div class="invalid-feedback">Choose party type.</div>
+                    </div>
+
+                    <div class="col-md-6 form-floating d-none" id="custDiv">
+                        <select asp-for="Order.PartyId"
+                                asp-items="Model.CustomerList"
+                                class="form-select">
+                            <option value="">-- Customer --</option>
+                        </select>
+                        <label asp-for="Order.PartyId">Customer</label>
+                    </div>
+                    <div class="col-md-6 form-floating d-none" id="suppDiv">
+                        <select asp-for="Order.PartyId"
+                                asp-items="Model.SupplierList"
+                                class="form-select">
+                            <option value="">-- Supplier --</option>
+                        </select>
+                        <label asp-for="Order.PartyId">Supplier</label>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Order Lines -->
+                <h6 class="mt-4">Order Lines</h6>
+                <table class="table table-sm table-bordered" id="linesTable">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Discount</th>
+                            <th>SubTotal</th>
+                            <th style="width:40px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < orderLines.Count; i++)
+                        {
+                            var ln = orderLines[i];
+                            <tr data-index="@i" data-id="@ln.ID">
+                                <td>
+                                    <select name="Order.OrderLines[@i].ProductId"
+                                            class="form-select product-select" required>
+                                        <option value="">-- Select --</option>
+                                        @foreach (var p in Model.ProductList)
+                                        {
+                                            if (p.Value == ln.ProductId.ToString())
+                                            {
+                                                <option value="@p.Value" selected="selected">@p.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@p.Value">@p.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <input name="Order.OrderLines[@i].Quantity"
+                                           value="@ln.Quantity"
+                                           type="number" min="1" required
+                                           class="form-control qty-input" />
+                                </td>
+                                <td>
+                                    <input name="Order.OrderLines[@i].UnitPrice"
+                                           value="@ln.UnitPrice"
+                                           type="number" step="0.01" required
+                                           class="form-control price-input" />
+                                </td>
+                                <td>
+                                    <input name="Order.OrderLines[@i].Discount"
+                                           value="@ln.Discount"
+                                           type="number" step="0.01"
+                                           class="form-control discount-input" />
+                                </td>
+                                <td class="text-center sub-total">
+                                    @ln.SubTotal.ToString("N2")
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-danger btn-remove-line">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="text-end mb-4">
+                    <button id="btnAddLine" type="button" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-plus-lg"></i> Add Line
+                    </button>
+                </div>
+
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit"
+                            class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save" : "Create")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    @* نجمع خيارات المنتجات في متغيّر JS لإعادة الاستخدام *@
+    <script>
+        var productOptionsHtml = '@Html.Raw(
+            string.Join("", Model.ProductList.Select(p =>
+                $"<option value=\"{p.Value}\">{p.Text}</option>"
+            ))
+        )';
+    </script>
+
+    <script>
+        (function () {
+            'use strict';
+
+            const partyTypeEl = document.getElementById('partyType');
+            const custDiv = document.getElementById('custDiv');
+            const suppDiv = document.getElementById('suppDiv');
+            const tableBody = document.querySelector('#linesTable tbody');
+            const deletedInput = document.querySelector('input[name="DeletedLineIds"]');
+
+            function updatePartyDropdowns() {
+                const val = partyTypeEl.value;
+                if (val === '0') {
+                    custDiv.classList.remove('d-none');
+                    suppDiv.classList.add('d-none');
+                } else if (val === '1') {
+                    suppDiv.classList.remove('d-none');
+                    custDiv.classList.add('d-none');
+                } else {
+                    custDiv.classList.add('d-none');
+                    suppDiv.classList.add('d-none');
+                }
+            }
+
+            function recalcRow(row) {
+                const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+                const price = parseFloat(row.querySelector('.price-input').value) || 0;
+                const disc = parseFloat(row.querySelector('.discount-input').value) || 0;
+                row.querySelector('.sub-total').textContent = ((qty * price) - disc).toFixed(2);
+            }
+
+            function updateIndices() {
+                Array.from(tableBody.children).forEach((tr, idx) => {
+                    tr.dataset.index = idx;
+                    ['ProductId', 'Quantity', 'UnitPrice', 'Discount'].forEach(field => {
+                        const el = tr.querySelector(`[name$=".${field}"]`);
+                        if (!el) return;
+                        el.name = `Order.OrderLines[${idx}].${field}`;
+                    });
+                });
+            }
+
+            partyTypeEl.addEventListener('change', updatePartyDropdowns);
+            updatePartyDropdowns();
+
+            tableBody.addEventListener('click', e => {
+                if (!e.target.closest('.btn-remove-line')) return;
+                const row = e.target.closest('tr');
+                const id = row.dataset.id;
+                if (id) {
+                    const arr = JSON.parse(deletedInput.value || '[]');
+                    arr.push(id);
+                    deletedInput.value = JSON.stringify(arr);
+                }
+                row.remove();
+                updateIndices();
+            });
+
+            document.getElementById('btnAddLine').addEventListener('click', () => {
+                const idx = tableBody.children.length;
+                const tr = document.createElement('tr');
+                tr.dataset.index = idx;
+                tr.dataset.id = '';
+                tr.innerHTML = `
+                    <td>
+                        <select name="Order.OrderLines[${idx}].ProductId"
+                                class="form-select product-select" required>
+                            <option value="">-- Select --</option>
+                            ${productOptionsHtml}
+                        </select>
+                    </td>
+                    <td>
+                        <input name="Order.OrderLines[${idx}].Quantity"
+                               type="number" class="form-control qty-input"
+                               min="1" required />
+                    </td>
+                    <td>
+                        <input name="Order.OrderLines[${idx}].UnitPrice"
+                               type="number" step="0.01"
+                               class="form-control price-input" required />
+                    </td>
+                    <td>
+                        <input name="Order.OrderLines[${idx}].Discount"
+                               type="number" step="0.01"
+                               class="form-control discount-input" />
+                    </td>
+                    <td class="text-center sub-total">0.00</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger btn-remove-line">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>`;
+                tableBody.appendChild(tr);
+            });
+
+            tableBody.addEventListener('input', e => {
+                if (e.target.matches('.qty-input, .price-input, .discount-input')) {
+                    recalcRow(e.target.closest('tr'));
+                }
+            });
+        })();
+    </script>
+}

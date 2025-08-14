@@ -1,0 +1,202 @@
+﻿@using ErpSwiftCore.Web.Enums
+@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.Companies
+
+@model CompanyDto
+
+@{
+    Layout = "_AdminLayout";
+    bool isEdit = Model.Id != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Company" : "Create New Company";
+}
+<section class="section">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">@ViewData["Title"]</h5>
+
+      <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Company Basics -->
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Company Name</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="CompanyName" class="form-control" placeholder="Company Name" />
+              <label asp-for="CompanyName">Company Name</label>
+            </div>
+            <span asp-validation-for="CompanyName" class="text-danger small"></span>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Tax ID</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="TaxID" class="form-control" placeholder="Tax ID" />
+              <label asp-for="TaxID">Tax ID</label>
+            </div>
+            <span asp-validation-for="TaxID" class="text-danger small"></span>
+          </div>
+        </div>
+
+        <div class="row mb-5">
+          <label class="col-sm-2 col-form-label">Industry Type</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <select asp-for="IndustryType"
+                      asp-items="Html.GetEnumSelectList<IndustryType>()"
+                      class="form-select" placeholder="Industry Type">
+                <option value="">-- Select Industry Type --</option>
+              </select>
+              <label asp-for="IndustryType">Industry Type</label>
+            </div>
+            <span asp-validation-for="IndustryType" class="text-danger small"></span>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Street</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="Address.Street" class="form-control" placeholder="Street" />
+              <label asp-for="Address.Street">Street</label>
+            </div>
+            <span asp-validation-for="Address.Street" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">City</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="Address.City" class="form-control" placeholder="City" />
+              <label asp-for="Address.City">City</label>
+            </div>
+            <span asp-validation-for="Address.City" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">State/Region</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="Address.State" class="form-control" placeholder="State or Region" />
+              <label asp-for="Address.State">State/Region</label>
+            </div>
+            <span asp-validation-for="Address.State" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Postal Code</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="Address.PostalCode" class="form-control" placeholder="Postal Code" />
+              <label asp-for="Address.PostalCode">Postal Code</label>
+            </div>
+            <span asp-validation-for="Address.PostalCode" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-5">
+          <label class="col-sm-2 col-form-label">Country</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="Address.Country" class="form-control" placeholder="Country" />
+              <label asp-for="Address.Country">Country</label>
+            </div>
+            <span asp-validation-for="Address.Country" class="text-danger small"></span>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <div class="input-group mb-1">
+              <span class="input-group-text"> </span>
+              <input asp-for="ContactInfo.Email" class="form-control" placeholder="email@example.com" />
+            </div>
+            <span asp-validation-for="ContactInfo.Email" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Phone</label>
+          <div class="col-sm-10">
+            <div class="input-group mb-1">
+              <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+              <input asp-for="ContactInfo.Phone" class="form-control" placeholder="Phone Number" />
+            </div>
+            <span asp-validation-for="ContactInfo.Phone" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Mobile</label>
+          <div class="col-sm-10">
+            <div class="input-group mb-1">
+              <span class="input-group-text"><i class="bi bi-phone"></i></span>
+              <input asp-for="ContactInfo.Mobile" class="form-control" placeholder="Mobile Number" />
+            </div>
+            <span asp-validation-for="ContactInfo.Mobile" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Fax</label>
+          <div class="col-sm-10">
+            <div class="input-group mb-1">
+              <span class="input-group-text"><i class="bi bi-printer"></i></span>
+              <input asp-for="ContactInfo.Fax" class="form-control" placeholder="Fax Number" />
+            </div>
+            <span asp-validation-for="ContactInfo.Fax" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Website</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <input asp-for="ContactInfo.Website" class="form-control" placeholder="https://example.com" />
+              <label asp-for="ContactInfo.Website">Website</label>
+            </div>
+            <span asp-validation-for="ContactInfo.Website" class="text-danger small"></span>
+          </div>
+        </div>
+        <div class="row mb-5">
+          <label class="col-sm-2 col-form-label">Additional Info</label>
+          <div class="col-sm-10">
+            <div class="form-floating">
+              <textarea asp-for="ContactInfo.Other" class="form-control" placeholder="Additional information" style="height: 100px;"></textarea>
+              <label asp-for="ContactInfo.Other">Additional Info</label>
+            </div>
+            <span asp-validation-for="ContactInfo.Other" class="text-danger small"></span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="text-end">
+          <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+          <button type="submit" class="btn btn-success">
+            @(isEdit ? "Save Changes" : "Create Company")
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+  <script>
+    (function () {
+      'use strict';
+      var forms = document.querySelectorAll('.needs-validation');
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+          if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    })();
+  </script>
+}

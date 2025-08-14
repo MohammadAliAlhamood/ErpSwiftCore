@@ -1,0 +1,568 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NiceAdmin Bootstrap Template</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <!-- Favicons -->
+    <link href="~/img/favicon.png" rel="icon">
+    <link href="~/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="~/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="~/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="~/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="~/vendor/simple-datatables/style.css" rel="stylesheet">
+    <!-- Toastr & DataTables CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" rel="stylesheet">
+    <!-- Template Main CSS File -->
+    <link href="~/css/style.css" rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
+            <a class="logo d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/img/logo.png" alt="">
+                <span class="d-none d-lg-block">NiceAdmin</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div> 
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+                <li class="nav-item d-block d-lg-none">
+                    <a class="nav-link nav-icon search-bar-toggle" href="#">
+                        <i class="bi bi-search"></i>
+                    </a>
+                </li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item dropdown pe-3">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0"
+                           href="#"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <img src="~/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                            <span class="d-none d-md-block dropdown-toggle ps-2">@User.Identity.Name</span>
+                        </a>
+                        <!-- End Profile Image Icon -->
+
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li class="dropdown-header">
+                                <h6>@User.Identity.Name</h6>
+                                <span>
+                                    @* عرض أول دور فقط؛ لتعديلٍ لعرض متعددة استخدم Join *@
+                                    @User.FindFirstValue(ClaimTypes.Role)
+                                </span>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" asp-controller="UserProfile" asp-action="Profile">
+                                    <i class="bi bi-person"></i>
+                                    <span>My Profile</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" asp-controller="Authentication" asp-action="ChangePassword">
+                                    <i class="bi bi-gear"></i>
+                                    <span>Account Settings</span>
+                                </a>
+                            </li>
+
+
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                                    <i class="bi bi-question-circle"></i>
+                                    <span>Need Help?</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <form asp-controller="Authentication" asp-action="Logout" method="post" class="w-100">
+                                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Sign Out</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul><!-- End Profile Dropdown Items -->
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center text-center me-3"
+                           asp-controller="Authentication"
+                           asp-action="Login">
+                            <i class="bi bi-box-arrow-in-right fs-5 me-1"></i>
+                            <span class="fs-6">Sign In</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center text-center"
+                           asp-controller="Authentication"
+                           asp-action="Register">
+                            <i class="bi bi-pencil-square fs-5 me-1"></i>
+                            <span class="fs-6">Sign Up</span>
+                        </a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+     </header>
+    <!-- End Header -->
+
+
+
+
+
+
+
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Products System Nav -->
+             <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#products-system-nav">
+                    <i class="bi bi-box"></i><span>Products</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="products-system-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+
+                    <!-- Products -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#product-nav">
+                            <i class="bi bi-bag"></i><span>Products</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="product-nav" class="nav-content collapse">
+                            <li><a asp-controller="Product" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="Product" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Product Categories -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#category-nav">
+                            <i class="bi bi-tags"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="category-nav" class="nav-content collapse">
+                            <li><a asp-controller="ProductCategory" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="ProductCategory" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Product Prices -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#price-nav">
+                            <i class="bi bi-currency-exchange"></i><span>Prices</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="price-nav" class="nav-content collapse">
+                            <li><a asp-controller="ProductPrice" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="ProductPrice" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Unit Conversions -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#conversion-nav">
+                            <i class="bi bi-arrow-left-right"></i><span>Conversions</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="conversion-nav" class="nav-content collapse">
+                            <li><a asp-controller="ProductUnitConversion" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="ProductUnitConversion" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Product Taxes -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#tax-nav">
+                            <i class="bi bi-percent"></i><span>Taxes</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="tax-nav" class="nav-content collapse">
+                            <li><a asp-controller="ProductTax" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="ProductTax" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Product Bundles -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#bundle-nav">
+                            <i class="bi bi-box-seam"></i><span>Bundles</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="bundle-nav" class="nav-content collapse">
+                            <li><a asp-controller="ProductBundle" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="ProductBundle" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+            <!-- بين قسم Products و Inventory -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#financials-system-nav">
+                    <i class="bi bi-currency-dollar"></i><span>Financials</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="financials-system-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+
+                    <!-- Accounts -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#accounts-nav">
+                            <i class="bi bi-credit-card-2-front"></i><span>Accounts</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="accounts-nav" class="nav-content collapse">
+                            <li><a asp-controller="Account" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="Account" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Cost Centers -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#costcenter-nav">
+                            <i class="bi bi-diagram-2"></i><span>Cost Centers</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="costcenter-nav" class="nav-content collapse">
+                            <li><a asp-controller="CostCenter" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li><a asp-controller="CostCenter" asp-action="Upsert"><i class="bi bi-circle"></i><span>Create</span></a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Journal Entries -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#journal-nav">
+                            <i class="bi bi-journals"></i><span>Journal Entries</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="journal-nav" class="nav-content collapse">
+                            <li><a asp-controller="JournalEntry" asp-action="Index"><i class="bi bi-circle"></i><span>Index</span></a></li>
+                            <li>
+                                <a asp-controller="JournalEntry" asp-action="Details" asp-route-id="">
+                                    <i class="bi bi-circle"></i><span>Details</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+
+
+
+            <!-- Inventory System Nav -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#inventory-system-nav">
+                    <i class="bi bi-archive"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="inventory-system-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+
+                    <!-- Stock -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#stock-nav">
+                            <i class="bi bi-boxes"></i><span>Stock</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="stock-nav" class="nav-content collapse">
+                            <li>
+                                <a asp-controller="Inventory" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Inventory" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Stock Transfers -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#transfer-nav">
+                            <i class="bi bi-arrow-left-right"></i><span>Stock Transfers</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="transfer-nav" class="nav-content collapse">
+                            <li>
+                                <a asp-controller="StocksTransfer" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="StocksTransfer" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Adjustments -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#adjust-nav">
+                            <i class="bi bi-pencil-square"></i><span>Adjustments</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="adjust-nav" class="nav-content collapse">
+                            <li>
+                                <a asp-controller="Adjustment" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Adjustment" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Policies -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#policy-nav">
+                            <i class="bi bi-shield-lock"></i><span>Policies</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="policy-nav" class="nav-content collapse">
+                            <li>
+                                <a asp-controller="InventoryPolicy" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="InventoryPolicy" asp-action="Edit">
+                                    <i class="bi bi-circle"></i><span>Manage</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Transactions -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#transaction-nav">
+                            <i class="bi bi-journal-text"></i><span>Transactions</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="transaction-nav" class="nav-content collapse">
+                            <li>
+                                <a asp-controller="InventoryTransaction" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Warehouses -->
+                    <li>
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#warehouse-nav">
+                            <i class="bi bi-building"></i><span>Warehouses</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="warehouse-nav" class="nav-content collapse">
+                            <li>
+                                <a asp-controller="Warehouse" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Warehouse" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+
+
+
+            <!-- ======= CRM System Nav ======= -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#crm-system-nav">
+                    <i class="bi bi-people"></i><span>CRM</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="crm-system-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+
+                    <!-- Customers -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#crm-customer-nav">
+                            <i class="bi bi-person-lines-fill"></i><span>Customers</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="crm-customer-nav" class="nav-content collapse" data-bs-parent="#crm-system-nav">
+                            <li>
+                                <a asp-controller="Customer" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Customer" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Suppliers -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#crm-supplier-nav">
+                            <i class="bi bi-truck"></i><span>Suppliers</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="crm-supplier-nav" class="nav-content collapse" data-bs-parent="#crm-system-nav">
+                            <li>
+                                <a asp-controller="Supplier" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Supplier" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+
+
+
+            <!-- ======= Billing System Nav ======= -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#billing-system-nav">
+                    <i class="bi bi-receipt"></i><span>Billing</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="billing-system-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+
+                    <!-- Orders -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#billing-orders-nav">
+                            <i class="bi bi-card-list"></i><span>Orders</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="billing-orders-nav" class="nav-content collapse" data-bs-parent="#billing-system-nav">
+                            <li>
+                                <a asp-controller="Order" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Order" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Invoices -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#billing-invoices-nav">
+                            <i class="bi bi-journal-text"></i><span>Invoices</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="billing-invoices-nav" class="nav-content collapse" data-bs-parent="#billing-system-nav">
+                            <li>
+                                <a asp-controller="Invoice" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Invoice" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Payments -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-toggle="collapse" href="#billing-payments-nav">
+                            <i class="bi bi-credit-card"></i><span>Payments</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="billing-payments-nav" class="nav-content collapse" data-bs-parent="#billing-system-nav">
+                            <li>
+                                <a asp-controller="Payment" asp-action="Index">
+                                    <i class="bi bi-circle"></i><span>Index</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Payment" asp-action="Upsert">
+                                    <i class="bi bi-circle"></i><span>Create</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+
+        </ul>
+    </aside>
+    <!-- End Sidebar-->
+
+
+    <main id="main" class="main">
+        <partial name="_Notifications" />
+        @RenderBody()
+    </main>
+
+
+    <!-- End #main -->
+    <footer id="footer" class="footer bg-white border-top py-4 mt-auto">
+        <div class="container">
+            <div class="row align-items-center gy-2">
+                <div class="col-md-6 text-center text-md-start">
+                    <span class="text-muted">
+                        &copy; @DateTime.Now.Year <strong>Erp Swift Core</strong>. All rights reserved.
+                    </span>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <nav class="d-inline-flex gap-3">
+                        <a href="/privacy" class="text-muted text-decoration-none">Privacy Policy</a>
+                        <a href="/terms" class="text-muted text-decoration-none">Terms of Service</a>
+                        <a href="/support" class="text-muted text-decoration-none">Support</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- 2. Bootstrap Bundle JS -->
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- 3. ApexCharts, Chart.js, ECharts, Quill -->
+    <script src="~/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/vendor/chart.js/chart.umd.js"></script>
+    <script src="~/vendor/echarts/echarts.min.js"></script>
+    <script src="~/vendor/quill/quill.min.js"></script>
+    <!-- 4. Simple-DataTables -->
+    <script src="~/vendor/simple-datatables/simple-datatables.js"></script>
+
+    <!-- DataTables & Toastr & SweetAlert2 -->
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- TinyMCE (local copy, avoid cloud quota) -->
+    <script src="~/vendor/tinymce/tinymce.min.js"></script>
+    <!-- Template Main JS File -->
+    <script src="~/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

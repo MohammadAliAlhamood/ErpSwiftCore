@@ -1,0 +1,108 @@
+﻿@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.Currencies
+@model IEnumerable<CurrencyDto>
+
+@{
+    Layout = "_AdminLayout";
+}
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@ViewData["Title"]</h5>
+                    <p class="card-text mb-4">
+                        Currency Management — view, create, edit, or delete currencies individually or in bulk.
+                    </p>
+                    <div class="mb-3 d-flex flex-wrap gap-2">
+                        <a asp-action="Upsert" class="btn btn-primary">
+                            <i class="bi bi-plus-lg"></i> New Currency
+                        </a>
+                    </div>
+                    <table class="table datatable table-bordered table-hover align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>Currency Code</th>
+                                <th>Currency Name</th>
+                                <th style="width:120px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No currencies to display.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var c in Model)
+                                {
+                                    <tr>
+                                        <td>@c.CurrencyCode</td>
+                                        <td>@c.CurrencyName</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a asp-action="Details" asp-route-id="@c.ID" class="btn btn-info" title="View">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a asp-action="Upsert" asp-route-id="@c.ID" class="btn btn-warning" title="Edit">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <form asp-action="Delete" asp-route-id="@c.ID" method="post" class="d-inline delete-form">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="button" class="btn btn-danger btn-delete" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new simpleDatatables.DataTable('.datatable');
+        });
+    </script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"
+          rel="stylesheet" integrity="sha512-VNd0bWq3Pb46m2P4Wy5TZXf4uqlJTkXYE6VmHZ+fvHYpuyPXeY6o0BFeuwjZZISoJm5LVge3VElVhPce4v8hxg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"
+            integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.btn-delete').on('click', function () {
+                var form = $(this).closest('.delete-form');
+                Swal.fire({
+                    title: 'Delete Currency',
+                    text: 'Are you sure you want to permanently delete this currency?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'Cancel'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

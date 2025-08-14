@@ -1,0 +1,85 @@
+﻿@using ErpSwiftCore.Web.Models.AuthenticationSystemManagmentModels.Authentication
+@model LoginRequestDto
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "تسجيل الدخول";
+}
+<div class="container">
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+                    <!-- Logo -->
+                    <div class="d-flex justify-content-center py-4">
+                        <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center w-auto">
+                            <img src="~/img/logo.png" alt="Logo" />
+                            <span class="d-none d-lg-block">تطبيق ERP</span>
+                        </a>
+                    </div>
+
+                    <!-- Card -->
+                    <div class="card mb-3 w-100">
+                        <div class="card-body">
+                            <div class="pt-4 pb-2 text-center">
+                                <h5 class="card-title pb-0 fs-4">تسجيل الدخول إلى حسابك</h5>
+                                <p class="small">أدخل اسم المستخدم وكلمة المرور للمتابعة</p>
+                            </div>
+
+                            <form asp-action="Login" method="post" class="row g-3 needs-validation" novalidate>
+                                @Html.AntiForgeryToken()
+
+                                <div class="col-12">
+                                    <label asp-for="UserName" class="form-label">اسم المستخدم أو البريد الإلكتروني</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text" id="inputGroupPrepend">&#64;</span>
+                                        <input asp-for="UserName"
+                                               class="form-control"
+                                               placeholder="اسم المستخدم أو البريد الإلكتروني"
+                                               aria-describedby="inputGroupPrepend"
+                                               required />
+                                        <div class="invalid-feedback" asp-validation-for="UserName"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label asp-for="Password" class="form-label">كلمة المرور</label>
+                                    <input asp-for="Password"
+                                           type="password"
+                                           class="form-control"
+                                           placeholder="كلمة المرور"
+                                           required />
+                                    <div class="invalid-feedback" asp-validation-for="Password"></div>
+                                </div>
+
+                             
+
+
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary w-100">دخول</button>
+                                </div>
+
+                                <div class="col-12 text-center">
+                                    <a asp-action="ForgotPassword" class="small">نسيت كلمة المرور؟</a>
+                                </div>
+
+                                <div class="col-12 text-center">
+                                    <p class="small mb-0">
+                                        ليس لديك حساب؟
+                                        <a asp-action="Register">إنشاء حساب</a>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                     
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

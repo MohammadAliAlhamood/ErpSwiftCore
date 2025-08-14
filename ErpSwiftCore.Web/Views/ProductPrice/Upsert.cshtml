@@ -1,0 +1,86 @@
+﻿@using ErpSwiftCore.Web.Models.ProductSystemManagmentModels.ProductPriceModels
+@using ErpSwiftCore.Web.Models.ProductSystemManagmentModels.ProductModels
+@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.Currencies
+@using ErpSwiftCore.Web.Enums
+@using ErpSwiftCore.Web.ViewModels
+@model ProductPriceViewModel
+
+@{
+    Layout = "_Layout";
+    bool isEdit = Model.ProductPrice.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Price" : "Create New Price";
+}
+
+<section class="section">
+    <div class="card mx-auto" style="max-width:600px">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ProductPrice.ID" />
+
+                <div class="mb-3 form-floating">
+                    <select asp-for="ProductPrice.ProductId" asp-items="Model.ProductList" class="form-select" required>
+                        <option value="">-- Select Product --</option>
+                    </select>
+                    <label asp-for="ProductPrice.ProductId">Product</label>
+                    <div class="invalid-feedback">Please select a product.</div>
+                </div>
+
+                <div class="mb-3 form-floating">
+                    <input asp-for="ProductPrice.Price" class="form-control" placeholder="Price" required />
+                    <label asp-for="ProductPrice.Price">Price</label>
+                    <div class="invalid-feedback">Enter a valid price.</div>
+                </div>
+
+                <div class="mb-3 form-floating">
+                    <select asp-for="ProductPrice.CurrencyId" asp-items="Model.CurrencyList" class="form-select" required>
+                        <option value="">-- Select Currency --</option>
+                    </select>
+                    <label asp-for="ProductPrice.CurrencyId">Currency</label>
+                    <div class="invalid-feedback">Please select a currency.</div>
+                </div>
+
+                <select asp-for="ProductPrice.PriceType"
+                        asp-items="Html.GetEnumSelectList<ProductPriceType>()"
+                        class="form-select"
+                        placeholder="Price Type"
+                        required>
+                    <option value="">-- Select Price Type --</option>
+                </select>
+
+                <div class="mb-3 form-floating">
+                    <input asp-for="ProductPrice.EffectiveDate" type="date" class="form-control" placeholder="Effective Date" required />
+                    <label asp-for="ProductPrice.EffectiveDate">Effective Date</label>
+                    <div class="invalid-feedback">Choose an effective date.</div>
+                </div>
+
+                <div class="text-end">
+                    <a asp-action="IndexAll" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save Changes" : "Create Price")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function(){
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.forEach.call(forms, function(form){
+                form.addEventListener('submit', function(e){
+                    if (!form.checkValidity()) {
+                        e.preventDefault(); e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

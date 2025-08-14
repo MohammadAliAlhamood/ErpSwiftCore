@@ -1,0 +1,28 @@
+﻿using ErpSwiftCore.Application.Features.Companies.Companies.Queries;
+using FluentValidation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ErpSwiftCore.Application.Features.Companies.Companies.Validator.Queries
+{
+
+    public class GetCompaniesPagedByCountryQueryValidator : AbstractValidator<GetCompaniesPagedByCountryQuery>
+    {
+        public GetCompaniesPagedByCountryQueryValidator()
+        {
+            RuleFor(x => x.Country)
+                .NotEmpty().WithMessage("الدولة مطلوبة.");
+
+            RuleFor(x => x.PageIndex)
+                .GreaterThanOrEqualTo(0).WithMessage("صفحة البداية يجب أن تكون 0 أو أكثر.");
+
+            RuleFor(x => x.PageSize)
+                .GreaterThan(0).WithMessage("حجم الصفحة يجب أن يكون أكبر من صفر.");
+        }
+    }
+
+
+}

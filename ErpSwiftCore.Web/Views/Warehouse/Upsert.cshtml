@@ -1,0 +1,98 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.WarehouseModels
+@model WarehouseViewModel
+
+@{
+    Layout = "_Layout";
+    bool isEdit = Model.Warehouse.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Warehouse" : "Create New Warehouse";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Warehouse.ID" />
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="Warehouse.Name">Name</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="Warehouse.Name" class="form-control" placeholder="Warehouse Name" />
+                            <label asp-for="Warehouse.Name">Name</label>
+                        </div>
+                        <span asp-validation-for="Warehouse.Name" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="Warehouse.Location">Location</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="Warehouse.Location" class="form-control" placeholder="Location (optional)" />
+                            <label asp-for="Warehouse.Location">Location</label>
+                        </div>
+                        <span asp-validation-for="Warehouse.Location" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <label class="col-sm-2 col-form-label" asp-for="Warehouse.BranchID">Branch</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="Warehouse.BranchID"
+                                    asp-items="Model.BranchList"
+                                    class="form-select">
+                                <option value="">-- None --</option>
+                            </select>
+                            <label asp-for="Warehouse.BranchID">Branch</label>
+                        </div>
+                        <span asp-validation-for="Warehouse.BranchID" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <div class="col-sm-2">Flags</div>
+                    <div class="col-sm-10 d-flex gap-3">
+                        <div class="form-check">
+                            <input asp-for="Warehouse.IsStorage" class="form-check-input" type="checkbox" />
+                            <label class="form-check-label" asp-for="Warehouse.IsStorage">Is Storage</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="Warehouse.IsOperational" class="form-check-input" type="checkbox" />
+                            <label class="form-check-label" asp-for="Warehouse.IsOperational">Is Operational</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit"
+                            class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save Changes" : "Create Warehouse")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

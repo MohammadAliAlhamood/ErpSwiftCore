@@ -1,0 +1,81 @@
+﻿@using ErpSwiftCore.Web.Models.ProductSystemManagmentModels.ProductUnitConversionModels
+@model ProductUnitConversionDto
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Conversion Details";
+}
+
+<section class="section">
+    <div class="row align-items-start">
+        <div class="col-lg-4 mb-4">
+            <div class="card p-3">
+                <h5 class="card-title">@Model.Product?.Name</h5>
+                <p class="mb-1"><strong>From:</strong> @Model.FromUnit?.Name</p>
+                <p class="mb-1"><strong>To:</strong> @Model.ToUnit?.Name</p>
+                <p class="mb-1"><strong>Rate:</strong> @Model.ConversionRate</p>
+                <p class="mb-0"><strong>Factor:</strong> @Model.Factor</p>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary">تفاصيل التحويل</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">المنتج</dt>
+                        <dd class="col-sm-8">@Model.Product?.Name</dd>
+
+                        <dt class="col-sm-4">وحدة المصدر</dt>
+                        <dd class="col-sm-8">@Model.FromUnit?.Name</dd>
+
+                        <dt class="col-sm-4">وحدة الهدف</dt>
+                        <dd class="col-sm-8">@Model.ToUnit?.Name</dd>
+
+                        <dt class="col-sm-4">معدل التحويل</dt>
+                        <dd class="col-sm-8">@Model.ConversionRate</dd>
+
+                        <dt class="col-sm-4">العامل</dt>
+                        <dd class="col-sm-8">@Model.Factor</dd>
+
+                        <dt class="col-sm-4">تاريخ الإنشاء</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">تاريخ التحديث</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.UpdatedAt.HasValue)
+                            {
+                                @Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">أنشئ بواسطة</dt>
+                        <dd class="col-sm-8">@Model.CreatedBy</dd>
+
+                        <dt class="col-sm-4">تحديث بواسطة</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.UpdatedBy.ToString()))
+                            {
+                                @Model.UpdatedBy
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> رجوع
+                    </a>
+                    <a asp-action="Upsert" asp-route-id="@Model.ID" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> تعديل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

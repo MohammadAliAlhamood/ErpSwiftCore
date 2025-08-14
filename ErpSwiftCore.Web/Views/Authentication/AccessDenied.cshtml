@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Access Denied";
+}
+<div class="container">
+    <section class="section error-403 min-vh-100 d-flex flex-column align-items-center justify-content-center text-center">
+        <h1>403</h1>
+        <h2>ليس لديك الصلاحية للوصول إلى هذه الصفحة.</h2>
+        <a class="btn btn-primary mt-3" href="@Url.Action("Index", "Home")">العودة إلى الصفحة الرئيسية</a>
+        <img src="~/img/not-found.svg" class="img-fluid py-5" alt="Access Denied" style="max-width: 400px;">
+        <div class="credits">
+            صُممت بواسطة <a href="https://bootstrapmade.com/">BootstrapMade</a>
+        </div>
+    </section>
+</div>

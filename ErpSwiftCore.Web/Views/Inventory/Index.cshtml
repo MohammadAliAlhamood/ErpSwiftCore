@@ -1,0 +1,67 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryModels
+@model IEnumerable<InventoryDto>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "All Inventories";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body mb-3 d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">@ViewData["Title"]</h5>
+            <div class="btn-group">
+                <a asp-action="Index" class="btn btn-outline-primary">All</a>
+                <a asp-action="ByProduct" asp-route-productId="" class="btn btn-outline-primary">By Product</a>
+                <a asp-action="ByWarehouse" asp-route-warehouseId="" class="btn btn-outline-primary">By Warehouse</a>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <table class="table datatable table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>Product</th>
+                        <th>Warehouse</th>
+                        <th>On Hand</th>
+                        <th>Reserved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="5" class="text-center text-muted">No inventory records.</td></tr>
+                    }
+                    else
+                    {
+                        foreach (var inv in Model)
+                        {
+                            <tr>
+                                <td>@inv.Product.Name</td>
+                                <td>@inv.Warehouse.Name</td>
+                                <td class="text-end">@inv.QuantityOnHand</td>
+                                <td class="text-end">@inv.QuantityReserved</td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Details" asp-route-id="@inv.ID" class="btn btn-info"><i class="bi bi-eye"></i></a>
+                                        <a asp-action="WithPolicy" asp-route-id="@inv.ID" class="btn btn-primary" title="Policy"><i class="bi bi-file-earmark-text"></i></a>
+                                        <a asp-action="WithTransactions" asp-route-id="@inv.ID" class="btn btn-secondary" title="Transactions"><i class="bi bi-journal-text"></i></a>
+                                        <a asp-action="WithNotifications" asp-route-id="@inv.ID" class="btn btn-warning" title="Notifications"><i class="bi bi-bell"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new simpleDatatables.DataTable('.datatable');
+        });
+    </script>
+}

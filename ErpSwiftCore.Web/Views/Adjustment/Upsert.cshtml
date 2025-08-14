@@ -1,0 +1,111 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.AdjustmentModels
+@model InventoryAdjustmentViewModel
+
+@{
+    Layout = "_Layout";
+    bool isEdit = Model.InventoryAdjustment.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Adjustment" : "New Adjustment";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="InventoryAdjustment.ID" />
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="InventoryAdjustment.ProductID">Product</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="InventoryAdjustment.ProductID"
+                                    asp-items="Model.ProductList"
+                                    class="form-select">
+                                <option value="">-- Select Product --</option>
+                            </select>
+                            <label asp-for="InventoryAdjustment.ProductID">Product</label>
+                        </div>
+                        <span asp-validation-for="InventoryAdjustment.ProductID" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="InventoryAdjustment.WarehouseID">Warehouse</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="InventoryAdjustment.WarehouseID"
+                                    asp-items="Model.WarehouseList"
+                                    class="form-select">
+                                <option value="">-- Select Warehouse --</option>
+                            </select>
+                            <label asp-for="InventoryAdjustment.WarehouseID">Warehouse</label>
+                        </div>
+                        <span asp-validation-for="InventoryAdjustment.WarehouseID" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="InventoryAdjustment.QuantityChanged">Quantity</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="InventoryAdjustment.QuantityChanged" class="form-control" placeholder="Quantity" />
+                            <label asp-for="InventoryAdjustment.QuantityChanged">Quantity</label>
+                        </div>
+                        <span asp-validation-for="InventoryAdjustment.QuantityChanged" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <label class="col-sm-2 col-form-label" asp-for="InventoryAdjustment.Reason">Reason</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="InventoryAdjustment.Reason" class="form-control" placeholder="Reason" />
+                            <label asp-for="InventoryAdjustment.Reason">Reason</label>
+                        </div>
+                        <span asp-validation-for="InventoryAdjustment.Reason" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <label class="col-sm-2 col-form-label" asp-for="InventoryAdjustment.AdjustmentDate">Date</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="InventoryAdjustment.AdjustmentDate" type="datetime-local" class="form-control" />
+                            <label asp-for="InventoryAdjustment.AdjustmentDate">Date</label>
+                        </div>
+                        <span asp-validation-for="InventoryAdjustment.AdjustmentDate" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit"
+                            class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save Changes" : "Create Adjustment")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

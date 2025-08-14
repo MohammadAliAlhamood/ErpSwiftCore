@@ -1,0 +1,160 @@
+﻿@using ErpSwiftCore.Web.Models.AuthenticationSystemManagmentModels.UserProfile
+@using ErpSwiftCore.Web.Utility
+@using System.Security.Claims
+@model UserDto
+@{
+    ViewData["Title"] = "Profile";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    bool isMyProfile = string.Equals(currentUserId, Model.Id, StringComparison.OrdinalIgnoreCase);
+    bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole(SD.Role_Admin);
+    Layout = isAdmin ? "_AdminLayout" : "_Layout";
+}
+<div class="pagetitle">
+    <h1>Profile</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">Profile</li>
+        </ol>
+    </nav>
+</div> 
+<section class="section profile">
+    <div class="row"> 
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                    <img src="@(Model.ProfilePictureUrl ?? Url.Content("~/img/profile-img.jpg"))"
+                         alt="Profile"
+                         class="rounded-circle mb-3" width="120" height="120" />
+                    <h2>@Model.Name</h2>
+                    <h3>
+                        @if (Model.Roles?.Any() == true)
+                        {
+                            @string.Join(", ", Model.Roles)
+                        }
+                        else
+                        {
+                            <span class="text-muted">No Roles</span>
+                        }
+                    </h3>
+                    @if (Model.IsBlocked)
+                    {
+                        <span class="badge bg-danger">Blocked</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                </div>
+            </div>
+        </div> 
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body pt-3"> 
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <button class="nav-link active"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#profile-overview">
+                                Overview
+                            </button>
+                        </li>
+                        @if (isMyProfile || User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_HRManager))
+                        {
+                            <li class="nav-item">
+                                <button class="nav-link"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#profile-edit">
+                                    Edit Profile
+                                </button>
+                            </li>
+                        }
+                    </ul> 
+                    <div class="tab-content pt-2"> 
+                        <div class="tab-pane fade show active profile-overview"
+                             id="profile-overview">
+                            <h5 class="card-title">Profile Details</h5>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Full Name</div>
+                                <div class="col-lg-9 col-md-8">@Model.Name</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Email</div>
+                                <div class="col-lg-9 col-md-8">@Model.Email</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Phone</div>
+                                <div class="col-lg-9 col-md-8">@Model.PhoneNumber</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-4 label">Address</div>
+                                <div class="col-lg-9 col-md-8">@Model.Address</div>
+                            </div> 
+                            @if (isMyProfile)
+                            {
+                                <div class="mt-4 text-center">
+                                    <a asp-controller="PasswordSecurity"
+                                       asp-action="ChangePassword"
+                                       class="btn btn-warning">
+                                        <i class="bi bi-key me-1"></i> Change Password
+                                    </a>
+                                </div>
+                            } 
+                        </div> 
+                        @if (isMyProfile || User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_HRManager))
+                        {
+                            <div class="tab-pane fade profile-edit pt-3"
+                                 id="profile-edit">
+                                <form asp-action="@(isMyProfile ? "UpdateMyProfile" : "UpdateProfile")"
+                                      method="post"
+                                      class="row g-3 needs-validation"
+                                      novalidate>
+                                    @Html.AntiForgeryToken()
+
+                                    @if (!isMyProfile)
+                                    {
+                                        <input asp-for="Id" type="hidden" />
+                                    }
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Name" class="form-label">Full Name</label>
+                                        <input asp-for="Name" class="form-control" required />
+                                        <div class="invalid-feedback" asp-validation-for="Name"></div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input value="@Model.Email" class="form-control" readonly />
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="PhoneNumber" class="form-label">Phone</label>
+                                        <input asp-for="PhoneNumber" type="tel" class="form-control" />
+                                        <div class="invalid-feedback" asp-validation-for="PhoneNumber"></div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Address" class="form-label">Address</label>
+                                        <input asp-for="Address" class="form-control" />
+                                        <div class="invalid-feedback" asp-validation-for="Address"></div>
+                                    </div>
+
+                                    <div class="col-md-12 mb-3">
+                                        <label asp-for="ProfilePictureUrl" class="form-label">Profile Picture URL</label>
+                                        <input asp-for="ProfilePictureUrl" type="url" class="form-control" />
+                                        <div class="invalid-feedback" asp-validation-for="ProfilePictureUrl"></div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form> 
+                            </div> 
+                        }
+                    </div> 
+                </div>
+            </div>
+        </div> 
+    </div>
+</section>

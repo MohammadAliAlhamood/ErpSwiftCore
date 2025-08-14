@@ -1,0 +1,135 @@
+﻿@using ErpSwiftCore.Web.Models.BillingSystemManagmentModels.OrderModels
+@model IEnumerable<OrderDto>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Orders";
+}
+
+<section class="section">
+    <div class="row mb-3">
+        <div class="col">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+            <p class="text-muted">Manage your orders — list, filter, create, update, or delete.</p>
+        </div>
+        <div class="col text-end">
+            <a asp-action="Upsert" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> New Order
+            </a>
+            <button id="btnDeleteAll" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Delete Selected
+            </button>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <select id="filterStatus" class="form-select">
+                <option value="">-- All Statuses --</option>
+                @foreach (var st in Enum.GetValues(typeof(ErpSwiftCore.Web.Enums.OrderStatus)))
+                {
+                    <option value="@st">@st</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <table class="table datatable table-bordered table-hover align-middle">
+        <thead class="table-light text-center">
+            <tr>
+                <th style="width:40px"><input type="checkbox" id="selectAll" /></th>
+                <th>Order #</th>
+                <th>Party</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th style="width:160px">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" class="text-center text-muted">No orders found.</td></tr>
+            }
+            else
+            {
+                foreach (var o in Model)
+                {
+                    <tr data-status="@o.OrderStatus">
+                        <td class="text-center"><input type="checkbox" class="select-item" value="@o.ID" /></td>
+                        <td>@o.OrderNumber</td>
+                        <td>@o.Party.Name</td>
+                        <td>@o.OrderDate.ToString("yyyy-MM-dd")</td>
+                        <td>@o.OrderStatus</td>
+                        <td>@o.TotalAmount.ToString("N2")</td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm">
+                                <a asp-action="Details" asp-route-id="@o.ID" class="btn btn-info" title="View"><i class="bi bi-eye"></i></a>
+                                <a asp-action="Upsert" asp-route-id="@o.ID" class="btn btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                <form asp-action="Delete" asp-route-id="@o.ID" method="post" class="d-inline delete-form">
+                                    @Html.AntiForgeryToken()
+                                    <button type="button" class="btn btn-danger btn-delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</section>
+
+@section Scripts {
+    <script>
+        $(function(){
+            const table = new simpleDatatables.DataTable('.datatable');
+
+            $('#selectAll').change(e => $('.select-item').prop('checked', e.target.checked));
+
+            // filter by status
+            $('#filterStatus').change(function(){
+                const val = $(this).val();
+                table.rows().every(row => {
+                    const el = row.node();
+                    const status = $(el).data('status');
+                    row.show(!val || status === val);
+                });
+            });
+
+            // single delete
+            $(document).on('click', '.btn-delete', function(e){
+                e.preventDefault();
+                const form = $(this).closest('form');
+                Swal.fire({
+                    title: 'Delete Order?',
+                    text: 'This will permanently delete the order.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete'
+                }).then(res => res.isConfirmed && form.submit());
+            });
+
+            // bulk delete
+            $('#btnDeleteAll').click(function(){
+                const ids = $('.select-item:checked').map((i,el)=>el.value).get();
+                if (!ids.length) {
+                    toastr.warning('No orders selected.');
+                    return;
+                }
+                Swal.fire({
+                    title: 'Delete Selected?',
+                    text: 'Permanently delete selected orders?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete'
+                }).then(res => {
+                    if (!res.isConfirmed) return;
+                    $.post('@Url.Action("DeleteRange")', {
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                        ids
+                    }).done(() => location.reload());
+                });
+            });
+        });
+    </script>
+}

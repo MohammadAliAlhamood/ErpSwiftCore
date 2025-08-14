@@ -1,0 +1,200 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] – YourERP Admin</title>
+
+    <!-- Favicons -->
+    <link href="~/img/favicon.png" rel="icon" />
+    <link href="~/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Nunito:300,400,600,700|Poppins:300,400,500,600,700" rel="stylesheet" />
+
+    <!-- Vendor CSS Files -->
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />
+    <link href="~/vendor/quill/quill.snow.css" rel="stylesheet" />
+    <link href="~/vendor/quill/quill.bubble.css" rel="stylesheet" />
+    <link href="~/vendor/remixicon/remixicon.css" rel="stylesheet" />
+    <link href="~/vendor/simple-datatables/style.css" rel="stylesheet" />
+
+
+    <!-- Toastr & DataTables CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <!-- Main CSS File -->
+    <link href="~/css/style.css" rel="stylesheet" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center">
+                <img src="~/img/logo.png" alt="YourERP Logo" />
+                <span class="d-none d-lg-block ms-2">YourERP Admin</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+            <nav class="header-nav ms-auto">
+                <ul class="d-flex align-items-center">
+                    <li class="nav-item dropdown pe-3">
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                            <img src="~/img/profile-img.jpg" class="rounded-circle" alt="Profile" />
+                            <span class="d-none d-md-block ps-2">@User.Identity.Name</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li class="dropdown-header">
+                                <h6>@User.Identity.Name</h6>
+                                <span>@User.FindFirstValue(ClaimTypes.Role)</span>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a asp-controller="UserProfile" asp-action="Profile" class="dropdown-item d-flex align-items-center">
+                                    <i class="bi bi-person"></i><span>My Profile</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a asp-controller="Authentication" asp-action="ChangePassword" class="dropdown-item d-flex align-items-center">
+                                    <i class="bi bi-gear"></i><span>Account Settings</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <form asp-controller="Authentication" asp-action="Logout" method="post" class="w-100">
+                                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                                        <i class="bi bi-box-arrow-right"></i><span>Sign Out</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- ======= End Header ======= -->
+
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+     
+        
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-grid"></i><span>Dashboard</span>
+                </a>
+            </li> 
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#nav-company">
+                    <i class="bi bi-building"></i><span>Companies</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="nav-company" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-controller="Company" asp-action="Index">
+                            <i class="bi bi-circle"></i><span>All Companies</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Company" asp-action="Upsert">
+                            <i class="bi bi-circle"></i><span>Create Companies</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#nav-currency">
+                    <i class="bi bi-cash-stack"></i><span>Currencies</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="nav-currency" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-controller="Currency" asp-action="Index">
+                            <i class="bi bi-circle"></i><span>All Currencies</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Currency" asp-action="Upsert">
+                            <i class="bi bi-circle"></i><span>Create Currencies</span>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#nav-units">
+                    <i class="bi bi-rulers"></i><span>Units</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="nav-units" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-controller="UnitOfMeasurement" asp-action="Index">
+                            <i class="bi bi-circle"></i><span>All Units</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="UnitOfMeasurement" asp-action="Upsert">
+                            <i class="bi bi-circle"></i><span>Create Units</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-toggle="collapse" href="#nav-user-profile">
+                    <i class="bi bi-person-lines-fill"></i><span>User Profile</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="nav-user-profile" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                    <li>
+                        <a asp-controller="UserProfile" asp-action="Users">
+                            <i class="bi bi-people"></i><span>All User Profiles</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="UserProfile" asp-action="Register">
+                            <i class="bi bi-person-plus"></i><span>Register New Account</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+
+
+    </aside>
+    <main id="main" class="main">
+        <partial name="_Notifications" />
+        @RenderBody()
+    </main>
+    <footer id="footer" class="footer bg-light border-top py-3 mt-auto">
+        <div class="container d-flex justify-content-between">
+            <div class="text-muted">&copy; @DateTime.Now.Year <strong>YourERP</strong>. All rights reserved.</div>
+            <nav>
+                <a href="/privacy" class="me-3 text-muted">Privacy Policy</a>
+                <a href="/terms" class="me-3 text-muted">Terms</a>
+                <a href="/support" class="text-muted">Support</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="~/vendor/chart.js/chart.umd.js"></script>
+    <script src="~/vendor/echarts/echarts.min.js"></script>
+    <script src="~/vendor/quill/quill.min.js"></script>
+    <script src="~/vendor/simple-datatables/simple-datatables.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/main.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

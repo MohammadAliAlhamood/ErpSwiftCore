@@ -1,0 +1,10 @@
+﻿@using ErpSwiftCore.Web.Utility
+@{
+    ViewData["Title"] = "Privacy Policy";
+    bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole(SD.Role_Admin);
+    Layout = isAdmin ? "_AdminLayout" : "_AuthLayout";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>

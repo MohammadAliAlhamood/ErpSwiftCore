@@ -1,0 +1,108 @@
+﻿@using ErpSwiftCore.Web.Models.AuthenticationSystemManagmentModels.UserProfile
+@model List<UserDto>
+
+@{
+    Layout = "_AdminLayout";
+
+    ViewData["Title"] = "Users";
+}
+
+<div class="pagetitle">
+    <h1>Users</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item active">Users</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">All Users</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Roles</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var user = Model[i];
+                        <tr>
+                            <th scope="row">@(i + 1)</th>
+                            <td>@user.Name</td>
+                            <td>@user.Email</td>
+                            <td>
+                                @if (user.Roles != null && user.Roles.Any())
+                                {
+                                    @string.Join(", ", user.Roles)
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No Roles</span>
+                                }
+                            </td>
+                            <td>
+                                @if (user.IsBlocked)
+                                {
+                                    <span class="badge bg-danger">Blocked</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Profile"
+                                   asp-route-userId="@user.Id"
+                                   class="btn btn-sm btn-info me-1">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                @if (user.IsBlocked)
+                                {
+                                    <form asp-action="UnblockUser"
+                                          method="post"
+                                          class="d-inline">
+                                        <input type="hidden" name="UserId" value="@user.Id" />
+                                        <button type="submit" class="btn btn-sm btn-success me-1" title="Unblock">
+                                            <i class="bi bi-unlock"></i>
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="BlockUser"
+                                          method="post"
+                                          class="d-inline">
+                                        <input type="hidden" name="UserId" value="@user.Id" />
+                                        <button type="submit" class="btn btn-sm btn-warning me-1" title="Block">
+                                            <i class="bi bi-slash-circle"></i>
+                                        </button>
+                                    </form>
+                                }
+
+                                <form asp-action="DeleteUser"
+                                      method="post"
+                                      class="d-inline">
+                                    <input type="hidden" name="UserId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

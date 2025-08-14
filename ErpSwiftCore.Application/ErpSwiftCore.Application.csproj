@@ -1,0 +1,109 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Features\FeaturesCompany\**" />
+    <EmbeddedResource Remove="Features\FeaturesCompany\**" />
+    <None Remove="Features\FeaturesCompany\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\Billings\InvoiceReporting\Validator\Commands\" />
+    <Folder Include="Features\Billings\InvoiceReporting\Validator\Dtos\" />
+    <Folder Include="Features\Billings\InvoiceReporting\Validator\Queries\" />
+    <Folder Include="Features\Billings\InvoiceTaxDiscounts\MappingProfiles\" />
+    <Folder Include="Features\Billings\InvoiceTaxDiscounts\Validator\Commands\" />
+    <Folder Include="Features\Billings\InvoiceTaxDiscounts\Validator\Dtos\" />
+    <Folder Include="Features\Billings\InvoiceTaxDiscounts\Validator\Queries\" />
+    <Folder Include="Features\Billings\Invoices\Validator\Commands\" />
+    <Folder Include="Features\Billings\Invoices\Validator\Dtos\" />
+    <Folder Include="Features\Billings\Invoices\Validator\Queries\" />
+    <Folder Include="Features\Billings\Orders\Validator\Commands\" />
+    <Folder Include="Features\Billings\Orders\Validator\Dtos\" />
+    <Folder Include="Features\Billings\Orders\Validator\Queries\" />
+    <Folder Include="Features\Billings\Payments\MappingProfiles\" />
+    <Folder Include="Features\Billings\Payments\Validator\Commands\" />
+    <Folder Include="Features\Billings\Payments\Validator\Dtos\" />
+    <Folder Include="Features\Billings\Payments\Validator\Queries\" />
+    <Folder Include="Features\CRMs\Customers\Validator\Commands\" />
+    <Folder Include="Features\CRMs\Customers\Validator\Dtos\" />
+    <Folder Include="Features\CRMs\Customers\Validator\Queries\" />
+    <Folder Include="Features\CRMs\Suppliers\Validator\Commands\" />
+    <Folder Include="Features\CRMs\Suppliers\Validator\Dtos\" />
+    <Folder Include="Features\CRMs\Suppliers\Validator\Queries\" />
+    <Folder Include="Features\FeaturesAuth\2FAs\Commands\" />
+    <Folder Include="Features\FeaturesAuth\2FAs\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\2FAs\Queries\" />
+    <Folder Include="Features\FeaturesAuth\AnalyticsAndReportings\Commands\" />
+    <Folder Include="Features\FeaturesAuth\AnalyticsAndReportings\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\AnalyticsAndReportings\Queries\" />
+    <Folder Include="Features\FeaturesAuth\Auths\Commands\" />
+    <Folder Include="Features\FeaturesAuth\Auths\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\Auths\Queries\" />
+    <Folder Include="Features\FeaturesAuth\NotificationsAndAlerts\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\NotificationsAndAlerts\Queries\" />
+    <Folder Include="Features\FeaturesAuth\Passwords\Commands\" />
+    <Folder Include="Features\FeaturesAuth\Passwords\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\Passwords\Queries\" />
+    <Folder Include="Features\FeaturesAuth\Profiles\Commands\" />
+    <Folder Include="Features\FeaturesAuth\Profiles\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\Profiles\Queries\" />
+    <Folder Include="Features\FeaturesAuth\RoleAndAccess\Commands\" />
+    <Folder Include="Features\FeaturesAuth\RoleAndAccess\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\RoleAndAccess\Queries\" />
+    <Folder Include="Features\FeaturesAuth\SecurityAndSessions\Commands\" />
+    <Folder Include="Features\FeaturesAuth\SecurityAndSessions\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\SecurityAndSessions\Queries\" />
+    <Folder Include="Features\FeaturesAuth\SocialLoginAndSSOs\Commands\" />
+    <Folder Include="Features\FeaturesAuth\SocialLoginAndSSOs\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\SocialLoginAndSSOs\Queries\" />
+    <Folder Include="Features\FeaturesAuth\TrustedDevices\Commands\" />
+    <Folder Include="Features\FeaturesAuth\TrustedDevices\Handlers\" />
+    <Folder Include="Features\FeaturesAuth\TrustedDevices\Queries\" />
+    <Folder Include="Features\Financials\Accounts\Validator\Commands\" />
+    <Folder Include="Features\Financials\Accounts\Validator\Dtos\" />
+    <Folder Include="Features\Financials\Accounts\Validator\Queries\" />
+    <Folder Include="Features\Financials\CostCenters\Validator\Commands\" />
+    <Folder Include="Features\Financials\CostCenters\Validator\Dtos\" />
+    <Folder Include="Features\Financials\CostCenters\Validator\Queries\" />
+    <Folder Include="Features\Financials\CustomFinancialReportResults\Validator\Commands\" />
+    <Folder Include="Features\Financials\CustomFinancialReportResults\Validator\Dtos\" />
+    <Folder Include="Features\Financials\CustomFinancialReportResults\Validator\Queries\" />
+    <Folder Include="Features\Financials\JournalEntry\MappingProfiles\" />
+    <Folder Include="Features\Financials\JournalEntry\Validator\Commands\" />
+    <Folder Include="Features\Financials\JournalEntry\Validator\Dtos\" />
+    <Folder Include="Features\Financials\JournalEntry\Validator\Queries\" />
+    <Folder Include="Features\Inventories\InventoriesAdjustment\Validator\Commands\" />
+    <Folder Include="Features\Inventories\InventoriesAdjustment\Validator\Dtos\" />
+    <Folder Include="Features\Inventories\InventoriesAdjustment\Validator\Queries\" />
+    <Folder Include="Features\Inventories\InventoriesPolicy\Validator\Commands\" />
+    <Folder Include="Features\Inventories\InventoriesPolicy\Validator\Dtos\" />
+    <Folder Include="Features\Inventories\InventoriesPolicy\Validator\Queries\" />
+    <Folder Include="Features\Inventories\InventoriesTransaction\Validator\Dtos\" />
+    <Folder Include="Features\Inventories\InventoriesTransaction\Validator\Queries\" />
+    <Folder Include="Features\Inventories\Inventories\Validator\Dtos\" />
+    <Folder Include="Features\Inventories\Inventories\Validator\Queries\" />
+    <Folder Include="Features\Inventories\StocksTransfer\Validator\Commands\" />
+    <Folder Include="Features\Inventories\StocksTransfer\Validator\Dtos\" />
+    <Folder Include="Features\Inventories\StocksTransfer\Validator\Queries\" />
+    <Folder Include="Features\Inventories\Warehouses\Validator\Commands\" />
+    <Folder Include="Features\Inventories\Warehouses\Validator\Dtos\" />
+    <Folder Include="Features\Inventories\Warehouses\Validator\Queries\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ErpSwiftCore.Domain\ErpSwiftCore.Domain.csproj" />
+    <ProjectReference Include="..\ErpSwiftCore.TenantManagement\ErpSwiftCore.TenantManagement.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EditorConfigFiles Remove="F:\MyComany\New folder\erp_Project\ErpSwiftCore\ErpSwiftCore.Application\Features\FeaturesHRM\Suppliers\Commands\.editorconfig" />
+  </ItemGroup>
+</Project>

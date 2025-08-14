@@ -1,0 +1,73 @@
+﻿@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.Currencies
+@model CurrencyDto
+
+
+@{
+    Layout = "_AdminLayout";
+    bool isEdit = Model.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Currency" : "Create New Currency";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID" />
+
+                <!-- Currency Code -->
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Currency Code</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="CurrencyCode" class="form-control" placeholder="Currency Code" />
+                            <label asp-for="CurrencyCode">Currency Code</label>
+                        </div>
+                        <span asp-validation-for="CurrencyCode" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Currency Name -->
+                <div class="row mb-5">
+                    <label class="col-sm-2 col-form-label">Currency Name</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="CurrencyName" class="form-control" placeholder="Currency Name" />
+                            <label asp-for="CurrencyName">Currency Name</label>
+                        </div>
+                        <span asp-validation-for="CurrencyName" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-success">
+                        @(isEdit ? "Save Changes" : "Create Currency")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+          'use strict';
+          var forms = document.querySelectorAll('.needs-validation');
+          Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+              if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+        })();
+    </script>
+}

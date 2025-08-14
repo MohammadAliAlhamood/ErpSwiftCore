@@ -1,0 +1,27 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryModels
+@model InventoryDto
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Current Stock After Adjustments";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body mb-3">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+            <p>Product: <strong>@Model.Product.Name</strong> | Warehouse: <strong>@Model.Warehouse.Name</strong></p>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Current On Hand</dt>
+                <dd class="col-sm-8">@Model.QuantityOnHand</dd>
+                <dt class="col-sm-4">Reserved</dt>
+                <dd class="col-sm-8">@Model.QuantityReserved</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Details" asp-route-id="@Model.ID" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+</section>

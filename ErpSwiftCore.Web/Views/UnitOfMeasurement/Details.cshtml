@@ -1,0 +1,63 @@
+﻿@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.UnitOfMeasurements
+@model UnitOfMeasurementDto
+
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "تفاصيل الوحدة";
+}
+
+<section class="section">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary">@Model.Name</h5>
+
+                    <dl class="row mb-3">
+                        <dt class="col-sm-4">الاختصار</dt>
+                        <dd class="col-sm-8">@Model.Abbreviation</dd>
+
+                        <dt class="col-sm-4">الوصف</dt>
+                        <dd class="col-sm-8">
+                            @if (string.IsNullOrWhiteSpace(Model.Description))
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                            else
+                            {
+                                @Model.Description
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">معرّف الوحدة</dt>
+                        <dd class="col-sm-8">@Model.ID</dd>
+
+                        <dt class="col-sm-4">تاريخ الإنشاء</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">آخر تعديل</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.UpdatedAt.HasValue)
+                            {
+                                @Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> رجوع
+                    </a>
+                    <a asp-action="Upsert" asp-route-id="@Model.ID" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> تعديل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

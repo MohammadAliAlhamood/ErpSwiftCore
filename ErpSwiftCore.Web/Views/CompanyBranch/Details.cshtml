@@ -1,0 +1,99 @@
+﻿@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.CompanyBranchs
+@model CompanyBranchDto
+
+@{
+    ViewData["Title"] = "تفاصيل الفرع";
+}
+
+<section class="section">
+    <div class="row align-items-start">
+        <!-- بطاقة الفرع مع Overlay -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <img src="~/img/branch-placeholder.jpg" class="card-img-top" alt="صورة الفرع">
+                <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark bg-opacity-50 text-white p-3">
+                    <h5 class="card-title">@Model.BranchName</h5>
+                    <p class="card-text mb-0">رمز الفرع: @Model.BranchCode</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- التفاصيل -->
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary">معلومات تفصيلية عن الفرع</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">الشركة</dt>
+                        <dd class="col-sm-9">@Model.Company?.CompanyName</dd>
+
+                        @if (Model.Address != null)
+                        {
+                            <dt class="col-sm-3">العنوان</dt>
+                            <dd class="col-sm-9">
+                                @Model.Address.Street, @Model.Address.City, @Model.Address.State,
+                                @Model.Address.PostalCode, @Model.Address.Country
+                            </dd>
+                        }
+                        else
+                        {
+                            <dt class="col-sm-3">العنوان</dt>
+                            <dd class="col-sm-9 text-muted">—</dd>
+                        }
+
+                        <dt class="col-sm-3">معلومات الاتصال</dt>
+                        <dd class="col-sm-9">
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactInfo.Email))
+                            {
+                                <div>📧 البريد الإلكتروني: @Model.ContactInfo.Email</div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactInfo.Phone))
+                            {
+                                <div>📞 الهاتف: @Model.ContactInfo.Phone</div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactInfo.Mobile))
+                            {
+                                <div>📱 الجوال: @Model.ContactInfo.Mobile</div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactInfo.Fax))
+                            {
+                                <div>📠 الفاكس: @Model.ContactInfo.Fax</div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactInfo.Website))
+                            {
+                                <div>
+                                    🌐 الموقع الإلكتروني:
+                                    <a href="@Model.ContactInfo.Website" target="_blank">
+                                        @Model.ContactInfo.Website
+                                    </a>
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model.ContactInfo.Other))
+                            {
+                                <div>ℹ️ معلومات إضافية: @Model.ContactInfo.Other</div>
+                            }
+                            @if (Model.ContactInfo == null
+                                                        || (string.IsNullOrWhiteSpace(Model.ContactInfo.Email)
+                                                        && string.IsNullOrWhiteSpace(Model.ContactInfo.Phone)
+                                                        && string.IsNullOrWhiteSpace(Model.ContactInfo.Mobile)
+                                                        && string.IsNullOrWhiteSpace(Model.ContactInfo.Fax)
+                                                        && string.IsNullOrWhiteSpace(Model.ContactInfo.Website)
+                                                        && string.IsNullOrWhiteSpace(Model.ContactInfo.Other)))
+                            {
+                                <span class="text-muted">لا توجد بيانات اتصال.</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> رجوع
+                    </a>
+                    <a asp-action="Upsert" asp-route-id="@Model.Id" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> تعديل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

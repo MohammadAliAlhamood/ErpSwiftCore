@@ -1,0 +1,25 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryModels
+@model InventoryDto
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Inventory Snapshot";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+            <p class="text-muted mb-4">Snapshot for Product <strong>@Model.Product.Name</strong> in Warehouse <strong>@Model.Warehouse.Name</strong>.</p>
+            <dl class="row">
+                <dt class="col-sm-3">On Hand</dt>
+                <dd class="col-sm-9">@Model.QuantityOnHand</dd>
+                <dt class="col-sm-3">Reserved</dt>
+                <dd class="col-sm-9">@Model.QuantityReserved</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,104 @@
+﻿@using ErpSwiftCore.Web.Models.FinancialSystemManagmentModels.AccountModels
+@using ErpSwiftCore.Web.Enums
+@using ErpSwiftCore.Web.ViewModels
+@model AccountViewModel
+
+@{
+    Layout = "_Layout";
+    bool isEdit = Model.Account.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Account" : "Create New Account";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Account.ID" />
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="Account.AccountNumber">Account No.</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Account.AccountNumber" class="form-control" />
+                        <span asp-validation-for="Account.AccountNumber" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="Account.Name">Name</label>
+                    <div class="col-sm-10">
+                        <input asp-for="Account.Name" class="form-control" />
+                        <span asp-validation-for="Account.Name" class="text-danger small"></span>
+                    </div>
+                </div>
+
+              
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="Account.TransactionType">Transaction Type</label>
+                    <div class="col-sm-10">
+                        <select asp-for="Account.TransactionType"
+                                asp-items="Html.GetEnumSelectList<TransactionType>()"
+                                class="form-select">
+                        </select>
+                        <span asp-validation-for="Account.TransactionType" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="Account.AccountType">Account Type</label>
+                    <div class="col-sm-10">
+                        <select asp-for="Account.AccountType"
+                                asp-items="Html.GetEnumSelectList<AccountType>()"
+                                class="form-select">
+                        </select>
+                        <span asp-validation-for="Account.AccountType" class="text-danger small"></span>
+                    </div>
+                </div>
+
+
+                <div class="mb-3 form-floating">
+                    <select asp-for="Account.CurrencyId" asp-items="Model.CurrencyList" class="form-select" required>
+                        <option value="">-- Select Currency --</option>
+                    </select>
+                    <label asp-for="Account.CurrencyId">Currency</label>
+                    <div class="invalid-feedback">Please select a currency.</div>
+                </div>
+
+
+                <div class="form-check form-switch mb-4">
+                    <input asp-for="Account.IsActive" class="form-check-input" />
+                    <label class="form-check-label" asp-for="Account.IsActive">Active</label>
+                </div>
+
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save Changes" : "Create Account")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Bootstrap validation
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

@@ -1,0 +1,88 @@
+﻿@using ErpSwiftCore.Web.Enums
+@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryPolicyModels
+@model IEnumerable<InventoryPolicyDto>
+
+@{
+    Layout = "_Layout";
+    // Use ViewContext.RouteData instead of static RouteData
+    var typeString = (string)ViewContext.RouteData.Values["type"]!;
+    var type = (InventoryPolicyType)Enum.Parse(typeof(InventoryPolicyType), typeString);
+    ViewData["Title"] = $"Policies of Type {type}";
+}
+
+<section class="section">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table datatable table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>Inventory ID</th>
+                        <th>Policy Type</th>
+                        <th>Reorder Level</th>
+                        <th>Max Stock</th>
+                        <th>Auto?</th>
+                        <th>Auto Qty</th>
+                        <th>Current Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">No policies found.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var p in Model)
+                        {
+                            <tr>
+                                <td>@p.InventoryID</td>
+                                <td>@p.PolicyType</td>
+                                <td class="text-end">@p.ReorderLevel</td>
+                                <td class="text-end">@p.MaxStockLevel</td>
+                                <td class="text-center">
+                                    @if (p.AutoReorderEnabled)
+                                    {
+                                        <i class="bi bi-check-circle-fill text-success"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-x-circle-fill text-danger"></i>
+                                    }
+                                </td>
+
+
+
+
+                        <td class="text-end">@p.AutoReorderQuantity?.ToString() ?? "—"</td>
+                        <td class="text-end">@p.CurrentStock?.ToString() ?? "—"</td>
+                        <td class="text-center">
+                            <a asp-action="Details" asp-route-id="@p.ID" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@p.ID" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </td>
+                    </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(() => new simpleDatatables.DataTable('.datatable'));
+    </script>
+}

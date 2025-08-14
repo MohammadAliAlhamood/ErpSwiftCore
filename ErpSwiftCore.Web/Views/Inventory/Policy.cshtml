@@ -1,0 +1,39 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryPolicyModels
+@model InventoryPolicyDto
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Inventory Policy";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+            <dl class="row">
+                <dt class="col-sm-4">Inventory ID</dt>
+                <dd class="col-sm-8">@Model.InventoryID</dd>
+                <dt class="col-sm-4">Type</dt>
+                <dd class="col-sm-8">@Model.PolicyType</dd>
+                <dt class="col-sm-4">Reorder Level</dt>
+                <dd class="col-sm-8">@Model.ReorderLevel</dd>
+                <dt class="col-sm-4">Max Stock</dt>
+                <dd class="col-sm-8">@Model.MaxStockLevel</dd>
+                <dt class="col-sm-4">Auto Reorder</dt>
+                <dd class="col-sm-8">
+                    @if (Model.AutoReorderEnabled)
+                    {
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-x-circle-fill text-danger"></i>
+                    }
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Details" asp-route-id="@Model.InventoryID" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+</section>

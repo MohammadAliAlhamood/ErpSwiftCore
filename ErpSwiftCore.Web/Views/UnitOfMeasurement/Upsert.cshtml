@@ -1,0 +1,84 @@
+﻿@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.UnitOfMeasurements
+@model UnitOfMeasurementDto
+
+@{
+    Layout = "_AdminLayout";
+    bool isEdit = Model.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Unit" : "Create New Unit";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ID" />
+
+                <!-- Name -->
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="Name" class="form-control" placeholder="Name" />
+                            <label asp-for="Name">Name</label>
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Abbreviation -->
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Abbreviation</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="Abbreviation" class="form-control" placeholder="Abbreviation" />
+                            <label asp-for="Abbreviation">Abbreviation</label>
+                        </div>
+                        <span asp-validation-for="Abbreviation" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="row mb-5">
+                    <label class="col-sm-2 col-form-label">Description</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <textarea asp-for="Description" class="form-control" placeholder="Description" style="height: 100px;"></textarea>
+                            <label asp-for="Description">Description</label>
+                        </div>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-success">
+                        @(isEdit ? "Save Changes" : "Create Unit")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+          'use strict';
+          var forms = document.querySelectorAll('.needs-validation');
+          Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (e) {
+              if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+        })();
+    </script>
+}

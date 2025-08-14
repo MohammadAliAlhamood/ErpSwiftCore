@@ -1,0 +1,97 @@
+﻿@using ErpSwiftCore.Web.ViewModels
+@model ProductBundleViewModel
+
+@{
+    Layout = "_Layout";
+    bool isEdit = Model.ProductBundle.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Bundle" : "Create New Bundle";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ProductBundle.ID" />
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductBundle.ParentProductId">Parent Product</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="ProductBundle.ParentProductId" asp-items="Model.ParentProductList" class="form-select">
+                                <option value="">-- Select Parent --</option>
+                            </select>
+                            <label asp-for="ProductBundle.ParentProductId">Parent Product</label>
+                        </div>
+                        <span asp-validation-for="ProductBundle.ParentProductId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductBundle.ComponentProductId">Component Product</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="ProductBundle.ComponentProductId" asp-items="Model.ComponentProductList" class="form-select">
+                                <option value="">-- Select Component --</option>
+                            </select>
+                            <label asp-for="ProductBundle.ComponentProductId">Component Product</label>
+                        </div>
+                        <span asp-validation-for="ProductBundle.ComponentProductId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductBundle.Quantity">Quantity</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="ProductBundle.Quantity" class="form-control" placeholder="Quantity" />
+                            <label asp-for="ProductBundle.Quantity">Quantity</label>
+                        </div>
+                        <span asp-validation-for="ProductBundle.Quantity" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductBundle.UnitOfMeasurementId">Unit</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="ProductBundle.UnitOfMeasurementId" asp-items="Model.UnitOfMeasurementList" class="form-select">
+                                <option value="">-- Select Unit --</option>
+                            </select>
+                            <label asp-for="ProductBundle.UnitOfMeasurementId">Unit</label>
+                        </div>
+                        <span asp-validation-for="ProductBundle.UnitOfMeasurementId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save Changes" : "Create Bundle")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}

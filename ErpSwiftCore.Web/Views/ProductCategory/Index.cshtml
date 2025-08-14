@@ -1,0 +1,129 @@
+﻿@using ErpSwiftCore.Web.Models.ProductSystemManagmentModels
+@model IEnumerable<ProductCategoryDto>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Product Categories";
+}
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@ViewData["Title"]</h5>
+                    <p class="card-text mb-4">
+                        إدارة فئات المنتجات — عرض، إنشاء، تعديل، أو حذف فئات المنتجات.
+                    </p>
+                    <div class="mb-3 d-flex flex-wrap gap-2">
+                        <a asp-action="Upsert" class="btn btn-primary">
+                            <i class="bi bi-plus-lg"></i> New Category
+                        </a>
+                        <button id="btnDeleteAll" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Delete All
+                        </button>
+                    </div>
+                    <table class="table datatable table-bordered table-hover align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th style="width:40px;">
+                                    <input type="checkbox" id="selectAll" />
+                                </th>
+                                <th>Name</th>
+                                <th>Parent Category</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No categories to display.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                foreach (var c in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="select-item" value="@c.ID" />
+                                        </td>
+                                        <td>@c.Name</td>
+                                        <td>@(c.ParentCategory?.Name ?? "—")</td>
+                                        <td>@c.CreatedAt.ToString("yyyy-MM-dd")</td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a asp-action="Details" asp-route-id="@c.ID" class="btn btn-info" title="View">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a asp-action="Upsert" asp-route-id="@c.ID" class="btn btn-warning" title="Edit">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <a asp-controller="Product" asp-action="ByCategory" asp-route-categoryId="@c.ID" class="btn btn-primary" title="Products">
+                                                    <i class="bi bi-box-seam"></i>
+                                                </a>
+                                                <form asp-action="Delete" asp-route-id="@c.ID" method="post" class="d-inline delete-form">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="button" class="btn btn-danger btn-delete" title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts { 
+    <script>
+        $(document).ready(function () { 
+            new simpleDatatables.DataTable('.datatable'); 
+            $('#selectAll').on('change', function () {
+                $('.select-item').prop('checked', this.checked);
+            }); 
+            $(document).on('click', '.btn-delete', function (e) {
+                e.preventDefault();
+                var form = $(this).closest('.delete-form');
+                Swal.fire({
+                    title: 'Delete Category',
+                    text: 'Are you sure you want to permanently delete this category?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it',
+                    cancelButtonText: 'Cancel'
+                }).then(result => {
+                    if (result.isConfirmed) form.submit();
+                });
+            }); 
+            $(document).on('click', '#btnDeleteAll', function () {
+                var ids = $('.select-item:checked').map(function () { return this.value; }).get();
+                if (!ids.length) {
+                    toastr.warning('لم يتم تحديد أي فئة للحذف.');
+                    return;
+                }
+                Swal.fire({
+                    title: 'Delete Selected',
+                    text: 'Are you sure you want to delete the selected categories?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete',
+                    cancelButtonText: 'Cancel'
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        $.post('@Url.Action("DeleteRange")', {
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                            ids: ids
+                        }).done(() => location.reload());
+                    }
+                });
+            });
+        });
+    </script>
+}

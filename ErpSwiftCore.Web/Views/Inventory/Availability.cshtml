@@ -1,0 +1,40 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryModels
+@model ProductAvailabilityDto
+
+@{
+    Layout = "_Layout";
+ }
+
+<section class="section">
+    <div class="card">
+        <div class="card-body mb-3">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                    <tr><th>Warehouse</th><th>Quantity</th></tr>
+                </thead>
+                <tbody>
+                    @if (!Model.QuantityByWarehouse.Any())
+                    {
+                        <tr><td colspan="2" class="text-center text-muted">No availability.</td></tr>
+                    }
+                    else
+                    {
+                        foreach (var kv in Model.QuantityByWarehouse)
+                        {
+                            <tr>
+                                <td>@kv.Key</td>
+                                <td class="text-end">@kv.Value</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+        </div>
+    </div>
+</section>

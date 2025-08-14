@@ -1,0 +1,50 @@
+﻿@using ErpSwiftCore.Web.Enums
+@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.InventoryPolicyModels
+@model InventoryPolicyDto
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Policy Details";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title mb-3">@Model.PolicyType.ToString() Policy</h5>
+            <dl class="row">
+                <dt class="col-sm-4">Inventory ID</dt>
+                <dd class="col-sm-8">@Model.InventoryID</dd>
+
+                <dt class="col-sm-4">Reorder Level</dt>
+                <dd class="col-sm-8">@Model.ReorderLevel</dd>
+
+                <dt class="col-sm-4">Max Stock Level</dt>
+                <dd class="col-sm-8">@Model.MaxStockLevel</dd>
+
+                <dt class="col-sm-4">Auto Reorder Enabled</dt>
+                <dd class="col-sm-8">
+                    @(Model.AutoReorderEnabled
+                                        ? "<i class=\"bi bi-check-circle-fill text-success\"></i> نعم"
+                                        : "<i class=\"bi bi-x-circle-fill text-danger\"></i> لا")
+                </dd>
+
+                <dt class="col-sm-4">Auto Reorder Qty</dt>
+                <dd class="col-sm-8">@Model.AutoReorderQuantity?.ToString() ?? "—"</dd>
+
+                <dt class="col-sm-4">Current Stock</dt>
+                <dd class="col-sm-8">@Model.CurrentStock?.ToString() ?? "—"</dd>
+
+                <dt class="col-sm-4">Notes</dt>
+                <dd class="col-sm-8">@(!string.IsNullOrWhiteSpace(Model.Notes) ? Model.Notes : "—")</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                <i class="bi bi-arrow-left"></i> رجوع
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-warning">
+                <i class="bi bi-pencil-square"></i> تعديل
+            </a>
+        </div>
+    </div>
+</section>

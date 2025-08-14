@@ -1,0 +1,90 @@
+﻿@using ErpSwiftCore.Web.Models.CompanySystemManagmentModels.Companies
+@model CompanyDto 
+@{
+    Layout = "_AdminLayout";
+}
+<section class="section">
+    <div class="row align-items-start">
+        <!-- صورة الشركة والآوفرلاي -->
+        <div class="col-lg-3 mb-4">
+            <div class="card">
+                <img src="~/img/card.jpg" class="card-img-top" alt="صورة الشركة">
+                <div class="card-img-overlay d-flex flex-column justify-content-end bg-dark bg-opacity-50 text-white p-3">
+                    <h5 class="card-title">@Model.CompanyName</h5>
+                    <p class="card-text mb-0">الرقم الضريبي: @Model.TaxID</p>
+                </div>
+            </div>
+        </div>
+        <!-- تفاصيل الشركة -->
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary">معلومات تفصيلية عن الشركة</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">نوع الصناعة</dt>
+                        <dd class="col-sm-9">@Model.IndustryType</dd>
+
+                        @if (Model.Address != null)
+                        {
+                            <dt class="col-sm-3">العنوان</dt>
+                            <dd class="col-sm-9">
+                                @Model.Address.Street, @Model.Address.City, @Model.Address.State, @Model.Address.PostalCode, @Model.Address.Country
+                            </dd>
+                        }
+                        else
+                        {
+                            <dt class="col-sm-3">العنوان</dt>
+                            <dd class="col-sm-9 text-muted">—</dd>
+                        }
+
+                        <dt class="col-sm-3">معلومات الاتصال</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.ContactInfo?.Email != null)
+                            {
+                                <div>📧 البريد الإلكتروني: @Model.ContactInfo.Email</div>
+                            }
+                            @if (Model.ContactInfo?.Phone != null)
+                            {
+                                <div>📞 الهاتف:      @Model.ContactInfo.Phone</div>
+                            }
+                            @if (Model.ContactInfo?.Mobile != null)
+                            {
+                                <div>📱 الجوال:      @Model.ContactInfo.Mobile</div>
+                            }
+                            @if (Model.ContactInfo?.Fax != null)
+                            {
+                                <div>📠 الفاكس:      @Model.ContactInfo.Fax</div>
+                            }
+                            @if (Model.ContactInfo?.Website != null)
+                            {
+                                <div>🌐 الموقع الإلكتروني: <a href="@Model.ContactInfo.Website" target="_blank">@Model.ContactInfo.Website</a></div>
+                            }
+                            @if (Model.ContactInfo?.Other != null)
+                            {
+                                <div>ℹ️ معلومات إضافية: @Model.ContactInfo.Other</div>
+                            }
+                            @if (Model.ContactInfo == null
+                                                        || (Model.ContactInfo.Email == null
+                                                        && Model.ContactInfo.Phone == null
+                                                        && Model.ContactInfo.Mobile == null
+                                                        && Model.ContactInfo.Fax == null
+                                                        && Model.ContactInfo.Website == null
+                                                        && Model.ContactInfo.Other == null))
+                            {
+                                <span class="text-muted">لا توجد بيانات اتصال.</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> رجوع
+                    </a>
+                    <a asp-action="Upsert" asp-route-id="@Model.Id" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> تعديل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

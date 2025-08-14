@@ -1,0 +1,90 @@
+﻿@using ErpSwiftCore.Web.Models.ProductSystemManagmentModels.ProductModels
+@using ErpSwiftCore.Web.Enums
+@model ProductDto
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Product Details";
+}
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 text-primary">تفاصيل المنتج</h5>
+                    <dl class="row mb-0">
+
+                        <dt class="col-sm-3">Name</dt>
+                        <dd class="col-sm-9">@Model.Name</dd>
+
+                        <dt class="col-sm-3">Code</dt>
+                        <dd class="col-sm-9">@Model.Code</dd>
+
+                        <dt class="col-sm-3">SKU</dt>
+                        <dd class="col-sm-9">@Model.SKU</dd>
+
+                        <dt class="col-sm-3">Barcode</dt>
+                        <dd class="col-sm-9">@Model.Barcode</dd>
+
+                        <dt class="col-sm-3">Product Type</dt>
+                        <dd class="col-sm-9">@Model.ProductType</dd>
+
+                        <dt class="col-sm-3">Category</dt>
+                        <dd class="col-sm-9">
+                            @(Model.Category?.Name ?? "<span class='text-muted'>—</span>")
+                        </dd>
+
+                        <dt class="col-sm-3">Unit</dt>
+                        <dd class="col-sm-9">@Model.UnitOfMeasurement?.Name</dd> 
+
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9">
+                            @if (!string.IsNullOrWhiteSpace(Model.Description))
+                            {
+                                @Html.Raw(Model.Description)
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3">Created At</dt>
+                        <dd class="col-sm-9">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                        <dt class="col-sm-3">Created By</dt>
+                        <dd class="col-sm-9">@Model.CreatedBy</dd>
+                        <dt class="col-sm-3">Updated At</dt>
+                        <dd class="col-sm-9">
+                            @Html.Raw(
+                            Model.UpdatedAt != null
+                            ? Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                            : "<span class='text-muted'>—</span>"
+                                                        )
+                        </dd>
+
+                        <dt class="col-sm-3">Updated By</dt>
+                        <dd class="col-sm-9">
+                            @Html.Raw(
+                                                        !string.IsNullOrWhiteSpace(Model.UpdatedBy?.ToString())
+                                                        ? Model.UpdatedBy
+                                                        : "<span class='text-muted'>—</span>"
+                                                        )
+                        </dd>
+
+
+                    </dl>
+                </div>
+                <div class="card-footer text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-arrow-left"></i> رجوع
+                    </a>
+                    <a asp-action="Upsert" asp-route-id="@Model.ID" class="btn btn-warning">
+                        <i class="bi bi-pencil-square"></i> تعديل
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

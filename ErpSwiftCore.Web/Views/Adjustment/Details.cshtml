@@ -1,0 +1,77 @@
+﻿@using ErpSwiftCore.Web.Models.InventorySystemManagmentModels.AdjustmentModels
+@model InventoryAdjustmentDto
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Adjustment Details";
+}
+
+<section class="section">
+    <div class="row align-items-start">
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <h5 class="card-title">@Model.Product?.Name — @Model.Warehouse?.Name</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-4 text-primary">Adjustment Details</h5>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Product</dt>
+                    <dd class="col-sm-8">@Model.Product?.Name</dd>
+
+                    <dt class="col-sm-4">Warehouse</dt>
+                    <dd class="col-sm-8">@Model.Warehouse?.Name</dd>
+
+                    <dt class="col-sm-4">Quantity Changed</dt>
+                    <dd class="col-sm-8">@Model.QuantityChanged</dd>
+
+                    <dt class="col-sm-4">Reason</dt>
+                    <dd class="col-sm-8">@Model.Reason</dd>
+
+                    <dt class="col-sm-4">Adjustment Date</dt>
+                    <dd class="col-sm-8">@Model.AdjustmentDate.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                    <dt class="col-sm-4">Created At</dt>
+                    <dd class="col-sm-8">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</dd>
+
+                    <dt class="col-sm-4">Updated At</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.UpdatedAt != null)
+                        {
+                            @Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Created By</dt>
+                    <dd class="col-sm-8">@Model.CreatedBy</dd>
+
+                    <dt class="col-sm-4">Updated By</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrEmpty(Model.UpdatedBy?.ToString()))
+                        {
+                            @Model.UpdatedBy
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer text-end">
+                <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+                <a asp-action="Upsert" asp-route-id="@Model.ID" class="btn btn-warning">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

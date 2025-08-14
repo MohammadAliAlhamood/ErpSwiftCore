@@ -1,0 +1,108 @@
+﻿@using ErpSwiftCore.Web.ViewModels
+@model ProductUnitConversionViewModel
+
+@{
+    Layout = "_Layout";
+    bool isEdit = Model.ProductUnitConversion.ID != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Edit Conversion" : "Create New Conversion";
+}
+
+<section class="section">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@ViewData["Title"]</h5>
+
+            <form asp-action="Upsert" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ProductUnitConversion.ID" />
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductUnitConversion.ProductId">Product</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="ProductUnitConversion.ProductId" asp-items="Model.ProductList" class="form-select">
+                                <option value="">-- Select Product --</option>
+                            </select>
+                            <label asp-for="ProductUnitConversion.ProductId">Product</label>
+                        </div>
+                        <span asp-validation-for="ProductUnitConversion.ProductId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductUnitConversion.FromUnitId">From Unit</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="ProductUnitConversion.FromUnitId" asp-items="Model.FromUnitList" class="form-select">
+                                <option value="">-- Select Unit --</option>
+                            </select>
+                            <label asp-for="ProductUnitConversion.FromUnitId">From Unit</label>
+                        </div>
+                        <span asp-validation-for="ProductUnitConversion.FromUnitId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductUnitConversion.ToUnitId">To Unit</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <select asp-for="ProductUnitConversion.ToUnitId" asp-items="Model.ToUnitList" class="form-select">
+                                <option value="">-- Select Unit --</option>
+                            </select>
+                            <label asp-for="ProductUnitConversion.ToUnitId">To Unit</label>
+                        </div>
+                        <span asp-validation-for="ProductUnitConversion.ToUnitId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductUnitConversion.ConversionRate">Conversion Rate</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="ProductUnitConversion.ConversionRate" class="form-control" placeholder="Rate" />
+                            <label asp-for="ProductUnitConversion.ConversionRate">Conversion Rate</label>
+                        </div>
+                        <span asp-validation-for="ProductUnitConversion.ConversionRate" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <label class="col-sm-2 col-form-label" asp-for="ProductUnitConversion.Factor">Factor</label>
+                    <div class="col-sm-10">
+                        <div class="form-floating">
+                            <input asp-for="ProductUnitConversion.Factor" class="form-control" placeholder="Factor" />
+                            <label asp-for="ProductUnitConversion.Factor">Factor</label>
+                        </div>
+                        <span asp-validation-for="ProductUnitConversion.Factor" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <a asp-action="Index" class="btn btn-outline-secondary me-2">Cancel</a>
+                    <button type="submit" class="btn @(isEdit ? "btn-warning" : "btn-success")">
+                        @(isEdit ? "Save Changes" : "Create Conversion")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}
