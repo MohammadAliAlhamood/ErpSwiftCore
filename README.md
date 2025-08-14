@@ -139,12 +139,5 @@ ErpSwiftCore is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 ---
 
-**ErpSwiftCore — The Future of Enterprise Management Systems!**
-
----
-
-Want to customize or integrate ErpSwiftCore with your systems? Contact us for tailored solutions.
-
----
-
-*If you need this README in Arabic or want to add more sections (screenshots, demo video, etc.), let us know!*
+**ErpSwiftCore â€” The Future of Enterprise Management Systems!**
+ 
